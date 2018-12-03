@@ -26,5 +26,11 @@ sudo service mongodb status
 3) Run the application via the following command:
 
 ```
-bundle exec ruby server.rb
+bundle exec ruby server.ru
+```
+
+Alternatively, use:
+
+```
+rackup server.ru
 ```
