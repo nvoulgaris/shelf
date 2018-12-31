@@ -10,7 +10,7 @@ Mongoid.load! "mongoid.config"
 class Application < Sinatra::Base
 
   register Sinatra::Namespace
-  
+
   namespace '/api/v1' do
 
     before do
@@ -52,6 +52,17 @@ class Application < Sinatra::Base
       if book.save
         response.headers['Location'] = "#{base_url}/api/v1/books/#{book.id}"
         status 201
+      else
+        status 422
+        body BookSerializer.new(book).to_json
+      end
+    end
+
+    patch '/books/:id' do |id|
+      book = Book.where(id: id).first
+      halt(404, { message:'Book Not Found'}.to_json) unless book
+      if book.update_attributes(json_params)
+        BookSerializer.new(book).to_json
       else
         status 422
         body BookSerializer.new(book).to_json
